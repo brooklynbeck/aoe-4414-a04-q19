@@ -61,7 +61,7 @@ jd_frac = jd-0.5 + d_frac
 
 t_ut1 = (jd_frac - 2451545.0)/36525
 gmst_sec = 67310.54841 + (876600*60*60+8640184.812866)*t_ut1 + 0.093104*t_ut1**2 - 6.2*10**(-6)*t_ut1**3
-gmst_rad = (gmst_sec%86400)*W_E
+gmst_rad = fmod(fmod(gmst_sec, 86400)*W_E+2*math.pi), (2*math.pi)
 
 eci_x_km = ecef_x_km*math.cos(gmst_rad) - ecef_y_km*math.sin(gmst_rad)
 eci_y_km = ecef_x_km*math.sin(gmst_rad) + ecef_y_km*math.cos(gmst_rad)

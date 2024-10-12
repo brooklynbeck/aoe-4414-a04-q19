@@ -17,7 +17,8 @@
 #
 # Written by Brooklyn Beck
 # Other contributors: None
-#
+# Updated with corrections
+
 # import Python modules
 import math # math module
 import sys # argv
@@ -55,18 +56,22 @@ else:
 
 # main script
 
+#calculate fractional julian date
 jd = day - 32075 + 1461*(year+4800-(14-month)//12)//4 + 367*(month-2+(14-month)//12*12)//12 - 3*((year+4900-(14-month)//12)//100)//4
 d_frac = (second + 60*(minute+60*hour))/86400
 jd_frac = jd-0.5 + d_frac
 
+#calculate gmst angle
 t_ut1 = (jd_frac - 2451545.0)/36525
 gmst_sec = 67310.54841 + (876600*60*60+8640184.812866)*t_ut1 + 0.093104*t_ut1**2 - 6.2*10**(-6)*t_ut1**3
-gmst_rad = fmod(fmod(gmst_sec, 86400)*W_E+2*math.pi), (2*math.pi)
+gmst_rad = math.fmod(math.fmod(gmst_sec, 86400)*W_E+2*math.pi, 2*math.pi)
 
-eci_x_km = ecef_x_km*math.cos(gmst_rad) - ecef_y_km*math.sin(gmst_rad)
-eci_y_km = ecef_x_km*math.sin(gmst_rad) + ecef_y_km*math.cos(gmst_rad)
+#calculate eci components
+eci_x_km = ecef_x_km*math.cos(-gmst_rad) + ecef_y_km*math.sin(-gmst_rad)
+eci_y_km = -ecef_x_km*math.sin(-gmst_rad) + ecef_y_km*math.cos(-gmst_rad)
 eci_z_km = ecef_z_km
 
+#print output
 print(eci_x_km)
 print(eci_y_km)
 print(eci_z_km)
